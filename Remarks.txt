@@ -1,0 +1,3 @@
+ProjectName folder path is used in backend so keep it accordingly. It is used to copy content and create new file from it.
+
+Userprojects folder path is used in backend so keep it accordingly. Change path if required.

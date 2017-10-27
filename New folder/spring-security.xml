@@ -1,0 +1,47 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security.xsd">
+	
+	<!-- enable use-expressions -->
+	<http auto-config="true" use-expressions="true">		
+		<intercept-url pattern="/user**" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
+		<form-login 
+		    login-page="/login"
+		    default-target-url="/index1.do"
+		    login-processing-url="/j_spring_security_check"
+			authentication-failure-url="/login?error" 
+			username-parameter="email"
+			password-parameter="password" 
+			authentication-success-handler-ref="Handler"
+			always-use-default-target="true"  />
+ 		<logout logout-success-url="/" logout-url="/j_spring_security_logout"/> 
+ 		<csrf disabled="true"/>
+ </http>
+  <authentication-manager>
+        
+            
+           <authentication-provider>
+		<jdbc-user-service data-source-ref="dataSource"
+		  users-by-username-query=
+		    "select email,password, enabled from login where email=?"
+		  authorities-by-username-query=
+		    "select email, role from Login where email=?" />
+	  </authentication-provider>
+            
+    </authentication-manager>  
+    
+ 
+ <beans:bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" >
+        <beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <beans:property name="url" value="jdbc:mysql://localhost/pathFinder"/>
+        <beans:property name="username" value="root"/>
+        <beans:property name="password" value="root"/>
+    </beans:bean>
+    
+ 	<beans:bean id="Handler" class="com.Controller.Handler"></beans:bean> <!-- must create Handler -->
+
+</beans:beans>
